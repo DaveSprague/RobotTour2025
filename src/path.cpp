@@ -45,7 +45,7 @@ void generatePath(PathVector &path, std::vector<PathSegment> &result) {
 
     // if last part, set speed 0
     currentPath.push_back(
-        Position{end.x, end.y, (i + 1 == path.size() - 1) ? 0 : SPEED});
+        Position{end.x, end.y, (i + 1 == path.size() - 1) ? 0.0 : static_cast<double>(SPEED)});
 
     // check if 180deg turn
     if (i < path.size() - 2 && path.at(i + 2).equals(start)) {
