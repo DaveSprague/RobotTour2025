@@ -27,9 +27,10 @@ const float FINISH_OFFSET = 16.f / 50;
 PathVector points = PathVector{
     {0, 0, 0}, {1, 0, 0}, {1, 1, 0}, {0, 1, 0}, {0, 2, 0}, {1, 2, 0}, {1, 3, 0}, {3, 3, 0}, {3, 2, 0}, {2 + FINISH_OFFSET, 2, 0}};
 
+
 // 0 | 1 | 2 | 3
 #define START_QUAD 0
-#define TARGET_SECONDS 48
+#define TARGET_SECONDS 45
 
 int main()
 {
@@ -38,16 +39,7 @@ int main()
       "Science Olympiad Robot Tour - derock@derock.dev"));
 
   stdio_init_all();
-
-  printf("[info] Starting...\n");
-  for (int i = 0; i < 5; i++)
-  {
-    sleep_ms(100);
-    printf("Starting...\n");
-    gpio_put(LIGHT_PIN, 1);
-    sleep_ms(1000);
-    gpio_put(LIGHT_PIN, 0);
-  }
+  sleep_ms(1000);
 
   // initialize GPIO
   gpio_init(BEEPER_PIN);
@@ -60,6 +52,15 @@ int main()
   gpio_set_dir(BEEPER_PIN, GPIO_OUT);
   gpio_set_dir(LIGHT_PIN, GPIO_OUT);
 
+  printf("[info] Starting...\n");
+  for (int i = 0; i < 5; i++)
+  {
+    sleep_ms(100);
+    printf("Starting...\n");
+    gpio_put(LIGHT_PIN, 1);
+    sleep_ms(1000);
+    gpio_put(LIGHT_PIN, 0);
+  }
   printf("[info] GPIO initialized\n");
 
   // initialize PIOs
@@ -80,7 +81,7 @@ int main()
   // setup BNO
   // hard reset
   printf("[info] BNO08x initializing...\n");
-  while (!imu->begin_I2C(BNO08x_I2CADDR_DEFAULT, i2c0, 20, 21))
+  while (!imu->begin_I2C(BNO08x_I2CADDR_DEFAULT, i2c0, 16, 17))
   {
     sleep_ms(100);
     printf("[info] BNO08x not found\n");
@@ -116,17 +117,6 @@ int main()
   gpio_put(LIGHT_PIN, 0);
   printf("[Info] BLINK Off On!!!\n");
   sleep_ms(1000);
-
-  // // Move forward 1 meter
-  // for (int i = 0; i < 10; i++)
-  // {
-  //   printf(" i = %d\n", i);
-  //   gpio_put(LIGHT_PIN, 1);
-  //   sleep_ms(50);
-  //   gpio_put(LIGHT_PIN, 0);
-  //   chassis::move(100, 100);
-  //   sleep_ms(1000);
-  // }
 
   // gen points
 
@@ -174,17 +164,9 @@ int main()
     sleep_ms(50);
     gpio_put(LIGHT_PIN, 0);
 
-    // **** REMOVED START BUTTON WAIT ****
-    // if (!gpio_get(START_BUTTON_PIN)) // pulled up
-    //   break;
-    // simulate waiting for 5 seconds for the start button to be pushed:
-    printf("[debug] waiting for start button\n");
-    for (int i = 0; i < 5; i++)
-    {
-      printf("[debug] starting in %d seconds\n", i);
-      sleep_ms(1000);
-    }
-    break;
+    if (!gpio_get(START_BUTTON_PIN)) // pulled up
+      break;
+   
 
     sleep_ms(50);
   }
