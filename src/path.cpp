@@ -26,7 +26,7 @@ void interpolatePath(PathVector &path, const Position &start,
   double d = start.distance(end);
 
   for (double n = 1; n < d; n++) {
-    path.emplace_back(Position{/* .x = */ start.x + n / d * (end.x - start.x),
+    path.push_back(Position{/* .x = */ start.x + n / d * (end.x - start.x),
                             /* .y = */ start.y + n / d * (end.y - start.y),
                             /* .theta = */ SPEED});
   }
@@ -44,19 +44,19 @@ void generatePath(PathVector &path, std::vector<PathSegment> &result) {
     interpolatePath(currentPath, start, end);
 
     // if last part, set speed 0
-    currentPath.emplace_back(
+    currentPath.push_back(
         Position{end.x, end.y, (i + 1 == path.size() - 1) ? 0.0 : static_cast<double>(SPEED)});
 
     // check if 180deg turn
     if (i < path.size() - 2 && path.at(i + 2).equals(start)) {
       currentPath.pop_back();
-      currentPath.emplace_back({end.x, end.y, 0});
+      currentPath.push_back({end.x, end.y, 0});
 
-      result.emplace_back({
+      result.push_back({
           0, // field not used atm
           currentPath,
       });
-      result.emplace_back({0, start.angle(end)});
+      result.push_back({0, start.angle(end)});
 
       currentPath = std::vector<Position>();
     }
@@ -65,5 +65,5 @@ void generatePath(PathVector &path, std::vector<PathSegment> &result) {
   }
 
   // push in last segment
-  result.emplace_back({0, currentPath});
+  result.push_back({0, currentPath});
 }

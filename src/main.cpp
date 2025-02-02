@@ -53,12 +53,12 @@ int main()
   gpio_set_dir(LIGHT_PIN, GPIO_OUT);
 
   printf("[info] Starting...\n");
-  for (int i = 0; i < 5; i++)
+  for (int i = 1; i < 11; i++) // blink lights faster and faster
   {
     sleep_ms(100);
     printf("Starting...\n");
     gpio_put(LIGHT_PIN, 1);
-    sleep_ms(1000);
+    sleep_ms((11-i)*100);
     gpio_put(LIGHT_PIN, 0);
   }
   printf("[info] GPIO initialized\n");
